@@ -12655,7 +12655,7 @@ class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
 class ParagraphAttributes extends XmlAttributeComponent {
   constructor() {
     super(...arguments);
-    __publicField(this, "xmlKeys", { paraId: "w14:paraId" });
+    __publicField(this, "xmlKeys", { paraId: "w16cid:paraId" });
   }
 }
 class Paragraph extends FileChild {
