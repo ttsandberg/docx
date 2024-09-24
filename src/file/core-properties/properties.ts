@@ -1,5 +1,5 @@
+import { ICommentsExtendedOptions, ICommentsOptions } from "@file/paragraph/run/comment-run";
 import { FontOptions } from "@file/fonts/font-table";
-import { ICommentsOptions } from "@file/paragraph/run/comment-run";
 import { IHyphenationOptions } from "@file/settings";
 import { ICompatibilityOptions } from "@file/settings/compatibility";
 import { StringContainer, XmlAttributeComponent, XmlComponent } from "@file/xml-components";
@@ -26,6 +26,7 @@ export type IPropertiesOptions = {
     readonly styles?: IStylesOptions;
     readonly numbering?: INumberingOptions;
     readonly comments?: ICommentsOptions;
+    readonly commentsExtended?: ICommentsExtendedOptions;
     readonly footnotes?: Readonly<
         Record<
             string,

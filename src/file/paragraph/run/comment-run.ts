@@ -13,6 +13,16 @@ export type ICommentsOptions = {
     readonly children: readonly ICommentOptions[];
 };
 
+export type ICommentExtendedOptions = {
+    readonly paraId: string;
+    readonly done: number;
+    readonly commentId: string;
+}
+
+export type ICommentsExtendedOptions = {
+    readonly children: readonly ICommentExtendedOptions[];
+}
+
 class CommentAttributes extends XmlAttributeComponent<{
     readonly id: number;
     readonly initials?: string;
@@ -20,6 +30,14 @@ class CommentAttributes extends XmlAttributeComponent<{
     readonly date?: string;
 }> {
     protected readonly xmlKeys = { id: "w:id", initials: "w:initials", author: "w:author", date: "w:date" };
+}
+
+class CommentExtendedAttributes extends XmlAttributeComponent<{
+    readonly paraId: string;
+    readonly done?: number;
+    readonly commentId: string;
+}> {
+    protected readonly xmlKeys = { paraId: "w15:paraId", done: "w15:done", commentId: "w15:commentId" };
 }
 
 class CommentRangeAttributes extends XmlAttributeComponent<{ readonly id: number }> {
@@ -57,6 +75,7 @@ class RootCommentsAttributes extends XmlAttributeComponent<{
     readonly "xmlns:wpi"?: string;
     readonly "xmlns:wne"?: string;
     readonly "xmlns:wps"?: string;
+    readonly "mc:Ignorable"?: string;
 }> {
     protected readonly xmlKeys = {
         "xmlns:cx": "xmlns:cx",
@@ -89,7 +108,19 @@ class RootCommentsAttributes extends XmlAttributeComponent<{
         "xmlns:wpg": "xmlns:wpg",
         "xmlns:wpi": "xmlns:wpi",
         "xmlns:wne": "xmlns:wne",
-        "xmlns:wps": "xmlns:wps",
+        "mc:Ignorable": "mc:Ignorable",
+    };
+}
+
+class RootCommentsExtendedAttributes extends XmlAttributeComponent<{
+    readonly "xmlns:mc"?: string;
+    readonly "xmlns:w15"?: string;
+    readonly "mc:Ignorable"?: string;
+}> {
+    protected readonly xmlKeys = {
+        "xmlns:mc": "xmlns:mc",
+        "xmlns:w15": "xmlns:w15",
+        "mc:Ignorable": "mc:Ignorable",
     };
 }
 
@@ -135,6 +166,19 @@ export class Comment extends XmlComponent {
         }
     }
 }
+export class CommentExtended extends XmlComponent {
+    public constructor({ paraId, done, commentId }: ICommentExtendedOptions) {
+        super("w15:commentEx");
+
+        this.root.push(
+            new CommentExtendedAttributes({
+                paraId,
+                commentId,
+                done,
+            }),
+        );
+    }
+}
 export class Comments extends XmlComponent {
     public constructor({ children }: ICommentsOptions) {
         super("w:comments");
@@ -172,11 +216,30 @@ export class Comments extends XmlComponent {
                 "xmlns:wpi": "http://schemas.microsoft.com/office/word/2010/wordprocessingInk",
                 "xmlns:wne": "http://schemas.microsoft.com/office/word/2006/wordml",
                 "xmlns:wps": "http://schemas.microsoft.com/office/word/2010/wordprocessingShape",
+                "mc:Ignorable": "w14 wp14 w15",
             }),
         );
 
         for (const child of children) {
             this.root.push(new Comment(child));
+        }
+    }
+}
+
+export class CommentsExtended extends XmlComponent {
+    public constructor({ children }: ICommentsExtendedOptions) {
+        super("w15:commentsEx");
+
+        this.root.push(
+            new RootCommentsExtendedAttributes({
+                "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
+                "xmlns:w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+                "mc:Ignorable": "w15",
+            }),
+        );
+
+        for (const child of children) {
+            this.root.push(new CommentExtended(child));
         }
     }
 }
