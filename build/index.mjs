@@ -12541,6 +12541,7 @@ class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
     super("w:pPr");
     // eslint-disable-next-line functional/prefer-readonly-type
     __publicField(this, "numberingReferences", []);
+    __publicField(this, "paraId");
     if (!options2) {
       return this;
     }
@@ -12637,9 +12638,7 @@ class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
     if (options2.run) {
       this.push(new RunProperties(options2.run));
     }
-    if (options2.paraId) {
-      this.push(new StringValueElement("w:paraId", options2.paraId));
-    }
+    this.paraId = options2.paraId;
   }
   push(item) {
     this.root.push(item);
@@ -12650,7 +12649,9 @@ class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
         context.file.Numbering.createConcreteNumberingInstance(reference.reference, reference.instance);
       }
     }
-    return super.prepForXml(context);
+    return this.paraId ? __spreadProps(__spreadValues({}, super.prepForXml(context)), {
+      "w:paraId": this.paraId
+    }) : super.prepForXml(context);
   }
 }
 class Paragraph extends FileChild {

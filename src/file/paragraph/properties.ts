@@ -1,7 +1,7 @@
 // http://officeopenxml.com/WPparagraphProperties.php
 // https://c-rex.net/projects/samples/ooxml/e1/Part4/OOXML_P4_DOCX_suppressLineNumbers_topic_ID0ECJAO.html
 /* eslint-disable functional/immutable-data */
-import { IContext, IgnoreIfEmptyXmlComponent, IXmlableObject, OnOffElement, StringValueElement, XmlComponent } from "@file/xml-components";
+import { IContext, IgnoreIfEmptyXmlComponent, IXmlableObject, OnOffElement, XmlComponent } from "@file/xml-components";
 import { DocumentWrapper } from "../document-wrapper";
 import { IShadingAttributesProperties, Shading } from "../shading";
 import { Alignment, AlignmentType } from "./formatting/alignment";
@@ -79,6 +79,7 @@ export interface IParagraphPropertiesOptions extends IParagraphStylePropertiesOp
 export class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
     // eslint-disable-next-line functional/prefer-readonly-type
     private readonly numberingReferences: { readonly reference: string; readonly instance: number }[] = [];
+    private readonly paraId: string|undefined;
 
     public constructor(options?: IParagraphPropertiesOptions) {
         super("w:pPr");
@@ -215,9 +216,7 @@ export class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
             this.push(new RunProperties(options.run));
         }
 
-        if (options.paraId) {
-            this.push(new StringValueElement("w:paraId", options.paraId));
-        }
+        this.paraId = options.paraId;
     }
 
     public push(item: XmlComponent): void {
@@ -231,6 +230,9 @@ export class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
             }
         }
 
-        return super.prepForXml(context);
+        return this.paraId ? {
+                ...super.prepForXml(context),
+                'w:paraId': this.paraId
+            } : super.prepForXml(context);
     }
 }

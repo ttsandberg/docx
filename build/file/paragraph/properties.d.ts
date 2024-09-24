@@ -51,6 +51,7 @@ export interface IParagraphPropertiesOptions extends IParagraphStylePropertiesOp
 }
 export declare class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
     private readonly numberingReferences;
+    private readonly paraId;
     constructor(options?: IParagraphPropertiesOptions);
     push(item: XmlComponent): void;
     prepForXml(context: IContext): IXmlableObject | undefined;
