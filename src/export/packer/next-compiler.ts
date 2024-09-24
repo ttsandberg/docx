@@ -32,6 +32,7 @@ interface IXmlifyedFileMapping {
     readonly FootNotesRelationships: IXmlifyedFile;
     readonly Settings: IXmlifyedFile;
     readonly Comments?: IXmlifyedFile;
+    readonly CommentsExtended?: IXmlifyedFile;
     readonly FontTable?: IXmlifyedFile;
     readonly FontTableRelationships?: IXmlifyedFile;
 }
@@ -57,7 +58,7 @@ export class Compiler {
                 for (const subFile of obj as readonly IXmlifyedFile[]) {
                     zip.file(subFile.path, subFile.data);
                 }
-            } else {
+            } else if (obj as IXmlifyedFile) {
                 zip.file((obj as IXmlifyedFile).path, (obj as IXmlifyedFile).data);
             }
         }
@@ -452,6 +453,25 @@ export class Compiler {
                 ),
                 path: "word/comments.xml",
             },
+            CommentsExtended: file.CommentsExtended
+                ? {
+                      data: xml(
+                          this.formatter.format(file.CommentsExtended, {
+                              viewWrapper: file.Document,
+                              file,
+                              stack: [],
+                          }),
+                          {
+                              indent: prettify,
+                              declaration: {
+                                  standalone: "yes",
+                                  encoding: "UTF-8",
+                              },
+                          },
+                      ),
+                      path: "word/commentsExtended.xml",
+                  }
+                : undefined,
             FontTable: {
                 data: xml(
                     this.formatter.format(file.FontTable.View, {

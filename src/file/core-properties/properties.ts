@@ -1,4 +1,4 @@
-import { ICommentsOptions } from "@file/paragraph/run/comment-run";
+import { ICommentsExtendedOptions, ICommentsOptions } from "@file/paragraph/run/comment-run";
 import { ICompatibilityOptions } from "@file/settings/compatibility";
 import { FontOptions } from "@file/fonts/font-table";
 import { StringContainer, XmlComponent } from "@file/xml-components";
@@ -26,6 +26,7 @@ export interface IPropertiesOptions {
     readonly styles?: IStylesOptions;
     readonly numbering?: INumberingOptions;
     readonly comments?: ICommentsOptions;
+    readonly commentsExtended?: ICommentsExtendedOptions;
     readonly footnotes?: {
         readonly [key: string]: {
             readonly children: readonly Paragraph[];

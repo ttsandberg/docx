@@ -10,7 +10,7 @@ import { Footer, Header } from "./header";
 import { HeaderWrapper, IDocumentHeader } from "./header-wrapper";
 import { Media } from "./media";
 import { Numbering } from "./numbering";
-import { Comments } from "./paragraph/run/comment-run";
+import { Comments, CommentsExtended } from "./paragraph/run/comment-run";
 import { Relationships } from "./relationships";
 import { Settings } from "./settings";
 import { Styles } from "./styles";
@@ -54,6 +54,7 @@ export class File {
     private readonly appProperties: AppProperties;
     private readonly styles: Styles;
     private readonly comments: Comments;
+    private readonly commentsExtended?: CommentsExtended;
     private readonly fontWrapper: FontWrapper;
 
     public constructor(options: IPropertiesOptions) {
@@ -67,6 +68,7 @@ export class File {
         this.numbering = new Numbering(options.numbering ? options.numbering : { config: [] });
 
         this.comments = new Comments(options.comments ?? { children: [] });
+        this.commentsExtended = options.commentsExtended ? new CommentsExtended(options.commentsExtended) : undefined;
         this.fileRelationships = new Relationships();
         this.customProperties = new CustomProperties(options.customProperties ?? []);
         this.appProperties = new AppProperties();
@@ -295,6 +297,10 @@ export class File {
 
     public get Comments(): Comments {
         return this.comments;
+    }
+
+    public get CommentsExtended(): CommentsExtended | undefined {
+        return this.commentsExtended;
     }
 
     public get FontTable(): FontWrapper {

@@ -9,8 +9,16 @@ export interface ICommentOptions {
     readonly date?: Date;
 }
 
+export interface ICommentExtendedOptions {
+    readonly paraId: number;
+    readonly done: number;
+}
+
 export interface ICommentsOptions {
     readonly children: readonly ICommentOptions[];
+}
+export interface ICommentsExtendedOptions {
+    readonly children: readonly ICommentExtendedOptions[];
 }
 
 class CommentAttributes extends XmlAttributeComponent<{
@@ -20,6 +28,13 @@ class CommentAttributes extends XmlAttributeComponent<{
     readonly date?: string;
 }> {
     protected readonly xmlKeys = { id: "w:id", initials: "w:initials", author: "w:author", date: "w:date" };
+}
+
+class CommentExtendedAttributes extends XmlAttributeComponent<{
+    readonly paraId: number;
+    readonly done?: number;
+}> {
+    protected readonly xmlKeys = { paraId: "w15:paraId", done: "w15:done" };
 }
 
 class CommentRangeAttributes extends XmlAttributeComponent<{ readonly id: number }> {
@@ -93,6 +108,16 @@ class RootCommentsAttributes extends XmlAttributeComponent<{
     };
 }
 
+class RootCommentsExtendedAttributes extends XmlAttributeComponent<{
+    readonly "xmlns:mc"?: string;
+    readonly "xmlns:w15"?: string;
+}> {
+    protected readonly xmlKeys = {
+        "xmlns:mc": "xmlns:mc",
+        "xmlns:w15": "xmlns:w15",
+    };
+}
+
 export class CommentRangeStart extends XmlComponent {
     public constructor(id: number) {
         super("w:commentRangeStart");
@@ -133,6 +158,18 @@ export class Comment extends XmlComponent {
         for (const child of children) {
             this.root.push(child);
         }
+    }
+}
+export class CommentExtended extends XmlComponent {
+    public constructor({ paraId, done }: ICommentExtendedOptions) {
+        super("w:comment");
+
+        this.root.push(
+            new CommentExtendedAttributes({
+                paraId,
+                done,
+            }),
+        );
     }
 }
 export class Comments extends XmlComponent {
@@ -177,6 +214,23 @@ export class Comments extends XmlComponent {
 
         for (const child of children) {
             this.root.push(new Comment(child));
+        }
+    }
+}
+
+export class CommentsExtended extends XmlComponent {
+    public constructor({ children }: ICommentsExtendedOptions) {
+        super("w15:commentsEx");
+
+        this.root.push(
+            new RootCommentsExtendedAttributes({
+                "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
+                "xmlns:w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            }),
+        );
+
+        for (const child of children) {
+            this.root.push(new CommentExtended(child));
         }
     }
 }
