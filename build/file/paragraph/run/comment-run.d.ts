@@ -8,7 +8,7 @@ export interface ICommentOptions {
     readonly date?: Date;
 }
 export interface ICommentExtendedOptions {
-    readonly paraId: number;
+    readonly paraId: string;
     readonly done: number;
 }
 export interface ICommentsOptions {

@@ -11267,7 +11267,7 @@ var __async = (__this, __arguments, generator) => {
   class CommentExtendedAttributes extends XmlAttributeComponent {
     constructor() {
       super(...arguments);
-      __publicField(this, "xmlKeys", { paraId: "w15:paraId", done: "w15:done" });
+      __publicField(this, "xmlKeys", { paraId: "w:paraId", done: "w:done" });
     }
   }
   class CommentRangeAttributes extends XmlAttributeComponent {
@@ -11359,7 +11359,7 @@ var __async = (__this, __arguments, generator) => {
   }
   class CommentExtended extends XmlComponent {
     constructor({ paraId, done }) {
-      super("w:comment");
+      super("w:commentEx");
       this.root.push(
         new CommentExtendedAttributes({
           paraId,
@@ -11413,7 +11413,7 @@ var __async = (__this, __arguments, generator) => {
   }
   class CommentsExtended extends XmlComponent {
     constructor({ children }) {
-      super("w15:commentsEx");
+      super("w:commentsEx");
       this.root.push(
         new RootCommentsExtendedAttributes({
           "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
