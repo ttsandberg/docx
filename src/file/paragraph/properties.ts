@@ -79,7 +79,6 @@ export interface IParagraphPropertiesOptions extends IParagraphStylePropertiesOp
 export class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
     // eslint-disable-next-line functional/prefer-readonly-type
     private readonly numberingReferences: { readonly reference: string; readonly instance: number }[] = [];
-    private readonly paraId: string|undefined;
 
     public constructor(options?: IParagraphPropertiesOptions) {
         super("w:pPr");
@@ -215,8 +214,6 @@ export class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
         if (options.run) {
             this.push(new RunProperties(options.run));
         }
-
-        this.paraId = options.paraId;
     }
 
     public push(item: XmlComponent): void {
@@ -230,9 +227,6 @@ export class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
             }
         }
 
-        return this.paraId ? {
-                ...super.prepForXml(context),
-                'w:paraId': this.paraId
-            } : super.prepForXml(context);
+        return super.prepForXml(context);
     }
 }

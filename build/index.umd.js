@@ -12545,7 +12545,6 @@ var __async = (__this, __arguments, generator) => {
       super("w:pPr");
       // eslint-disable-next-line functional/prefer-readonly-type
       __publicField(this, "numberingReferences", []);
-      __publicField(this, "paraId");
       if (!options2) {
         return this;
       }
@@ -12642,7 +12641,6 @@ var __async = (__this, __arguments, generator) => {
       if (options2.run) {
         this.push(new RunProperties(options2.run));
       }
-      this.paraId = options2.paraId;
     }
     push(item) {
       this.root.push(item);
@@ -12653,9 +12651,13 @@ var __async = (__this, __arguments, generator) => {
           context.file.Numbering.createConcreteNumberingInstance(reference.reference, reference.instance);
         }
       }
-      return this.paraId ? __spreadProps(__spreadValues({}, super.prepForXml(context)), {
-        "w:paraId": this.paraId
-      }) : super.prepForXml(context);
+      return super.prepForXml(context);
+    }
+  }
+  class ParagraphAttributes extends XmlAttributeComponent {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "xmlKeys", { paraId: "w:paraId" });
     }
   }
   class Paragraph extends FileChild {
@@ -12667,6 +12669,13 @@ var __async = (__this, __arguments, generator) => {
         this.root.push(this.properties);
         this.root.push(new TextRun(options2));
         return this;
+      }
+      if (options2.paraId) {
+        this.root.push(
+          new ParagraphAttributes({
+            paraId: options2.paraId
+          })
+        );
       }
       this.properties = new ParagraphProperties(options2);
       this.root.push(this.properties);

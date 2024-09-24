@@ -1,6 +1,6 @@
 // http://officeopenxml.com/WPparagraph.php
 import { FootnoteReferenceRun } from "@file/footnotes";
-import { IContext, IXmlableObject } from "@file/xml-components";
+import { IContext, IXmlableObject, XmlAttributeComponent } from "@file/xml-components";
 import { uniqueId } from "@util/convenience-functions";
 import { FileChild } from "@file/file-child";
 
@@ -43,6 +43,12 @@ export interface IParagraphOptions extends IParagraphPropertiesOptions {
     readonly children?: readonly ParagraphChild[];
 }
 
+class ParagraphAttributes extends XmlAttributeComponent<{
+    readonly paraId?: string;
+}> {
+    protected readonly xmlKeys = { paraId: "w:paraId" };
+}
+
 export class Paragraph extends FileChild {
     private readonly properties: ParagraphProperties;
 
@@ -54,6 +60,14 @@ export class Paragraph extends FileChild {
             this.root.push(this.properties);
             this.root.push(new TextRun(options));
             return this;
+        }
+
+        if (options.paraId) {
+            this.root.push(
+                new ParagraphAttributes({
+                    paraId: options.paraId,
+                }),
+            );
         }
 
         this.properties = new ParagraphProperties(options);
