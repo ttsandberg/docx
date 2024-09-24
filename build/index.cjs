@@ -15713,6 +15713,12 @@ class File {
       "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
       "comments.xml"
     );
+    this.documentWrapper.Relationships.createRelationship(
+      // eslint-disable-next-line functional/immutable-data
+      this.currentRelationshipId++,
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.commentsExtended+xml",
+      "commentsExtended.xml"
+    );
   }
   get Document() {
     return this.documentWrapper;
