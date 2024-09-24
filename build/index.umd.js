@@ -12641,6 +12641,9 @@ var __async = (__this, __arguments, generator) => {
       if (options2.run) {
         this.push(new RunProperties(options2.run));
       }
+      if (options2.paraId) {
+        this.push(new StringValueElement("w:paraId", options2.paraId));
+      }
     }
     push(item) {
       this.root.push(item);

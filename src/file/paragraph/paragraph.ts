@@ -39,6 +39,7 @@ export type ParagraphChild =
 
 export interface IParagraphOptions extends IParagraphPropertiesOptions {
     readonly text?: string;
+    readonly paraId?: string;
     readonly children?: readonly ParagraphChild[];
 }
 

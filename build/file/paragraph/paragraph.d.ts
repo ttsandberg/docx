@@ -12,6 +12,7 @@ import { Comment, CommentRangeEnd, CommentRangeStart, CommentReference, Comments
 export type ParagraphChild = TextRun | ImageRun | SymbolRun | Bookmark | PageBreak | ColumnBreak | SequentialIdentifier | FootnoteReferenceRun | InternalHyperlink | ExternalHyperlink | InsertedTextRun | DeletedTextRun | Math | SimpleField | SimpleMailMergeField | Comments | Comment | CommentRangeStart | CommentRangeEnd | CommentReference | CheckBox;
 export interface IParagraphOptions extends IParagraphPropertiesOptions {
     readonly text?: string;
+    readonly paraId?: string;
     readonly children?: readonly ParagraphChild[];
 }
 export declare class Paragraph extends FileChild {

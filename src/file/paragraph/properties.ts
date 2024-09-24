@@ -1,7 +1,7 @@
 // http://officeopenxml.com/WPparagraphProperties.php
 // https://c-rex.net/projects/samples/ooxml/e1/Part4/OOXML_P4_DOCX_suppressLineNumbers_topic_ID0ECJAO.html
 /* eslint-disable functional/immutable-data */
-import { IContext, IgnoreIfEmptyXmlComponent, IXmlableObject, OnOffElement, XmlComponent } from "@file/xml-components";
+import { IContext, IgnoreIfEmptyXmlComponent, IXmlableObject, OnOffElement, StringValueElement, XmlComponent } from "@file/xml-components";
 import { DocumentWrapper } from "../document-wrapper";
 import { IShadingAttributesProperties, Shading } from "../shading";
 import { Alignment, AlignmentType } from "./formatting/alignment";
@@ -64,6 +64,7 @@ export interface IParagraphPropertiesOptions extends IParagraphStylePropertiesOp
     readonly wordWrap?: boolean;
     readonly overflowPunctuation?: boolean;
     readonly scale?: number;
+    readonly paraId?: string;
     /**
      * This element specifies whether inter-character spacing shall automatically be adjusted between regions of numbers and regions of East Asian text in the current paragraph. These regions shall be determined by the Unicode character values of the text content within the paragraph.
      * This only works in Microsoft Word. It is not part of the ECMA-376 OOXML standard.
@@ -212,6 +213,10 @@ export class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
 
         if (options.run) {
             this.push(new RunProperties(options.run));
+        }
+
+        if (options.paraId) {
+            this.push(new StringValueElement("w:paraId", options.paraId));
         }
     }
 

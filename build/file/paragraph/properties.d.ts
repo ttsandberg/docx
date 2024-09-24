@@ -45,6 +45,7 @@ export interface IParagraphPropertiesOptions extends IParagraphStylePropertiesOp
     readonly wordWrap?: boolean;
     readonly overflowPunctuation?: boolean;
     readonly scale?: number;
+    readonly paraId?: string;
     readonly autoSpaceEastAsianText?: boolean;
     readonly run?: IRunOptions;
 }
