@@ -15718,7 +15718,7 @@ var __async = (__this, __arguments, generator) => {
       this.documentWrapper.Relationships.createRelationship(
         // eslint-disable-next-line functional/immutable-data
         this.currentRelationshipId++,
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.commentsExtended+xml",
+        "http://schemas.microsoft.com/office/2011/relationships/commentsExtended",
         "commentsExtended.xml"
       );
     }

@@ -19,7 +19,7 @@ export type RelationshipType =
     | "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes"
     | "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments"
     | "http://schemas.openxmlformats.org/officeDocument/2006/relationships/font"
-    | "application/vnd.openxmlformats-officedocument.wordprocessingml.commentsExtended+xml";
+    | "http://schemas.microsoft.com/office/2011/relationships/commentsExtended";
 
 export const TargetModeType = {
     EXTERNAL: "External",
