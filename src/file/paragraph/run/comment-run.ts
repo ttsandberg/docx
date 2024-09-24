@@ -12,6 +12,7 @@ export interface ICommentOptions {
 export interface ICommentExtendedOptions {
     readonly paraId: string;
     readonly done: number;
+    readonly commentId: string;
 }
 
 export interface ICommentsOptions {
@@ -33,8 +34,9 @@ class CommentAttributes extends XmlAttributeComponent<{
 class CommentExtendedAttributes extends XmlAttributeComponent<{
     readonly paraId: string;
     readonly done?: number;
+    readonly commentId: string;
 }> {
-    protected readonly xmlKeys = { paraId: "w15:paraId", done: "w15:done" };
+    protected readonly xmlKeys = { paraId: "w15:paraId", done: "w15:done", commentId: "w15:commentId" };
 }
 
 class CommentRangeAttributes extends XmlAttributeComponent<{ readonly id: number }> {
@@ -161,12 +163,13 @@ export class Comment extends XmlComponent {
     }
 }
 export class CommentExtended extends XmlComponent {
-    public constructor({ paraId, done }: ICommentExtendedOptions) {
+    public constructor({ paraId, done, commentId }: ICommentExtendedOptions) {
         super("w15:commentEx");
 
         this.root.push(
             new CommentExtendedAttributes({
                 paraId,
+                commentId,
                 done,
             }),
         );

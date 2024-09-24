@@ -10,6 +10,7 @@ export interface ICommentOptions {
 export interface ICommentExtendedOptions {
     readonly paraId: string;
     readonly done: number;
+    readonly commentId: string;
 }
 export interface ICommentsOptions {
     readonly children: readonly ICommentOptions[];
@@ -30,7 +31,7 @@ export declare class Comment extends XmlComponent {
     constructor({ id, initials, author, date, children }: ICommentOptions);
 }
 export declare class CommentExtended extends XmlComponent {
-    constructor({ paraId, done }: ICommentExtendedOptions);
+    constructor({ paraId, done, commentId }: ICommentExtendedOptions);
 }
 export declare class Comments extends XmlComponent {
     constructor({ children }: ICommentsOptions);

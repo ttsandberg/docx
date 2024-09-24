@@ -11267,7 +11267,7 @@ var __async = (__this, __arguments, generator) => {
   class CommentExtendedAttributes extends XmlAttributeComponent {
     constructor() {
       super(...arguments);
-      __publicField(this, "xmlKeys", { paraId: "w15:paraId", done: "w15:done" });
+      __publicField(this, "xmlKeys", { paraId: "w15:paraId", done: "w15:done", commentId: "w15:commentId" });
     }
   }
   class CommentRangeAttributes extends XmlAttributeComponent {
@@ -11358,11 +11358,12 @@ var __async = (__this, __arguments, generator) => {
     }
   }
   class CommentExtended extends XmlComponent {
-    constructor({ paraId, done }) {
+    constructor({ paraId, done, commentId }) {
       super("w15:commentEx");
       this.root.push(
         new CommentExtendedAttributes({
           paraId,
+          commentId,
           done
         })
       );
@@ -13724,7 +13725,12 @@ var __async = (__this, __arguments, generator) => {
       this.root.push(new Override("application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml", "/word/footnotes.xml"));
       this.root.push(new Override("application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml", "/word/settings.xml"));
       this.root.push(new Override("application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml", "/word/comments.xml"));
-      this.root.push(new Override("application/vnd.openxmlformats-officedocument.wordprocessingml.commentsExtended+xml", "/word/commentsExtended.xml"));
+      this.root.push(
+        new Override(
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.commentsExtended+xml",
+          "/word/commentsExtended.xml"
+        )
+      );
       this.root.push(new Override("application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml", "/word/fontTable.xml"));
     }
     addFooter(index) {
