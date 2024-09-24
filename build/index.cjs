@@ -11265,7 +11265,7 @@ class CommentAttributes extends XmlAttributeComponent {
 class CommentExtendedAttributes extends XmlAttributeComponent {
   constructor() {
     super(...arguments);
-    __publicField(this, "xmlKeys", { paraId: "w:paraId", done: "w:done" });
+    __publicField(this, "xmlKeys", { paraId: "w15:paraId", done: "w15:done" });
   }
 }
 class CommentRangeAttributes extends XmlAttributeComponent {
@@ -11357,7 +11357,7 @@ class Comment extends XmlComponent {
 }
 class CommentExtended extends XmlComponent {
   constructor({ paraId, done }) {
-    super("w:commentEx");
+    super("w15:commentEx");
     this.root.push(
       new CommentExtendedAttributes({
         paraId,
@@ -11411,7 +11411,7 @@ class Comments extends XmlComponent {
 }
 class CommentsExtended extends XmlComponent {
   constructor({ children }) {
-    super("w:commentsEx");
+    super("w15:commentsEx");
     this.root.push(
       new RootCommentsExtendedAttributes({
         "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
@@ -12655,7 +12655,7 @@ class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
 class ParagraphAttributes extends XmlAttributeComponent {
   constructor() {
     super(...arguments);
-    __publicField(this, "xmlKeys", { paraId: "w:paraId" });
+    __publicField(this, "xmlKeys", { paraId: "w14:paraId" });
   }
 }
 class Paragraph extends FileChild {
