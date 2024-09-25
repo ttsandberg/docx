@@ -173,6 +173,7 @@ describe("Comments", () => {
                             "xmlns:wpi": "http://schemas.microsoft.com/office/word/2010/wordprocessingInk",
                             "xmlns:wne": "http://schemas.microsoft.com/office/word/2006/wordml",
                             "xmlns:wps": "http://schemas.microsoft.com/office/word/2010/wordprocessingShape",
+                            "mc:Ignorable": "w14 wp14 w15",
                         },
                     },
                     {

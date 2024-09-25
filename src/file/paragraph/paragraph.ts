@@ -46,7 +46,7 @@ export interface IParagraphOptions extends IParagraphPropertiesOptions {
 class ParagraphAttributes extends XmlAttributeComponent<{
     readonly paraId?: string;
 }> {
-    protected readonly xmlKeys = { paraId: "w16cid:paraId" };
+    protected readonly xmlKeys = { paraId: "w14:paraId" };
 }
 
 export class Paragraph extends FileChild {

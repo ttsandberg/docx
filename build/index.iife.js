@@ -11308,7 +11308,7 @@ var __async = (__this, __arguments, generator) => {
         "xmlns:wpg": "xmlns:wpg",
         "xmlns:wpi": "xmlns:wpi",
         "xmlns:wne": "xmlns:wne",
-        "xmlns:wps": "xmlns:wps"
+        "mc:Ignorable": "mc:Ignorable"
       });
     }
   }
@@ -11317,7 +11317,8 @@ var __async = (__this, __arguments, generator) => {
       super(...arguments);
       __publicField(this, "xmlKeys", {
         "xmlns:mc": "xmlns:mc",
-        "xmlns:w15": "xmlns:w15"
+        "xmlns:w15": "xmlns:w15",
+        "mc:Ignorable": "mc:Ignorable"
       });
     }
   }
@@ -11402,7 +11403,8 @@ var __async = (__this, __arguments, generator) => {
           "xmlns:wpg": "http://schemas.microsoft.com/office/word/2010/wordprocessingGroup",
           "xmlns:wpi": "http://schemas.microsoft.com/office/word/2010/wordprocessingInk",
           "xmlns:wne": "http://schemas.microsoft.com/office/word/2006/wordml",
-          "xmlns:wps": "http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+          "xmlns:wps": "http://schemas.microsoft.com/office/word/2010/wordprocessingShape",
+          "mc:Ignorable": "w14 wp14 w15"
         })
       );
       for (const child of children) {
@@ -11416,7 +11418,8 @@ var __async = (__this, __arguments, generator) => {
       this.root.push(
         new RootCommentsExtendedAttributes({
           "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
-          "xmlns:w15": "http://schemas.microsoft.com/office/word/2012/wordml"
+          "xmlns:w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+          "mc:Ignorable": "w15"
         })
       );
       for (const child of children) {
@@ -12656,7 +12659,7 @@ var __async = (__this, __arguments, generator) => {
   class ParagraphAttributes extends XmlAttributeComponent {
     constructor() {
       super(...arguments);
-      __publicField(this, "xmlKeys", { paraId: "w16cid:paraId" });
+      __publicField(this, "xmlKeys", { paraId: "w14:paraId" });
     }
   }
   class Paragraph extends FileChild {

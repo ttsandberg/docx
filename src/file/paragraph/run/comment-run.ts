@@ -74,6 +74,7 @@ class RootCommentsAttributes extends XmlAttributeComponent<{
     readonly "xmlns:wpi"?: string;
     readonly "xmlns:wne"?: string;
     readonly "xmlns:wps"?: string;
+    readonly "mc:Ignorable"?: string;
 }> {
     protected readonly xmlKeys = {
         "xmlns:cx": "xmlns:cx",
@@ -106,17 +107,19 @@ class RootCommentsAttributes extends XmlAttributeComponent<{
         "xmlns:wpg": "xmlns:wpg",
         "xmlns:wpi": "xmlns:wpi",
         "xmlns:wne": "xmlns:wne",
-        "xmlns:wps": "xmlns:wps",
+        "mc:Ignorable": "mc:Ignorable",
     };
 }
 
 class RootCommentsExtendedAttributes extends XmlAttributeComponent<{
     readonly "xmlns:mc"?: string;
     readonly "xmlns:w15"?: string;
+    readonly "mc:Ignorable"?: string;
 }> {
     protected readonly xmlKeys = {
         "xmlns:mc": "xmlns:mc",
         "xmlns:w15": "xmlns:w15",
+        "mc:Ignorable": "mc:Ignorable"
     };
 }
 
@@ -212,6 +215,7 @@ export class Comments extends XmlComponent {
                 "xmlns:wpi": "http://schemas.microsoft.com/office/word/2010/wordprocessingInk",
                 "xmlns:wne": "http://schemas.microsoft.com/office/word/2006/wordml",
                 "xmlns:wps": "http://schemas.microsoft.com/office/word/2010/wordprocessingShape",
+                "mc:Ignorable": "w14 wp14 w15"
             }),
         );
 
@@ -229,6 +233,7 @@ export class CommentsExtended extends XmlComponent {
             new RootCommentsExtendedAttributes({
                 "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
                 "xmlns:w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+                "mc:Ignorable": "w15"
             }),
         );
 
