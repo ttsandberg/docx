@@ -1,19 +1,19 @@
-import { ICommentsExtendedOptions, ICommentsOptions } from "@file/paragraph/run/comment-run";
-import { ICompatibilityOptions } from "@file/settings/compatibility";
 import { FontOptions } from "@file/fonts/font-table";
-import { StringContainer, XmlComponent } from "@file/xml-components";
+import { ICommentsExtendedOptions, ICommentsOptions } from "@file/paragraph/run/comment-run";
+import { IHyphenationOptions } from "@file/settings";
+import { ICompatibilityOptions } from "@file/settings/compatibility";
+import { StringContainer, XmlAttributeComponent, XmlComponent } from "@file/xml-components";
 import { dateTimeValue } from "@util/values";
 
 import { ICustomPropertyOptions } from "../custom-properties";
 import { IDocumentBackgroundOptions } from "../document";
-
 import { DocumentAttributes } from "../document/document-attributes";
 import { ISectionOptions } from "../file";
 import { INumberingOptions } from "../numbering";
 import { Paragraph } from "../paragraph";
 import { IStylesOptions } from "../styles";
 
-export interface IPropertiesOptions {
+export type IPropertiesOptions = {
     readonly sections: readonly ISectionOptions[];
     readonly title?: string;
     readonly subject?: string;
@@ -27,11 +27,14 @@ export interface IPropertiesOptions {
     readonly numbering?: INumberingOptions;
     readonly comments?: ICommentsOptions;
     readonly commentsExtended?: ICommentsExtendedOptions;
-    readonly footnotes?: {
-        readonly [key: string]: {
-            readonly children: readonly Paragraph[];
-        };
-    };
+    readonly footnotes?: Readonly<
+        Record<
+            string,
+            {
+                readonly children: readonly Paragraph[];
+            }
+        >
+    >;
     readonly background?: IDocumentBackgroundOptions;
     readonly features?: {
         readonly trackRevisions?: boolean;
@@ -43,7 +46,8 @@ export interface IPropertiesOptions {
     readonly evenAndOddHeaderAndFooters?: boolean;
     readonly defaultTabStop?: number;
     readonly fonts?: readonly FontOptions[];
-}
+    readonly hyphenation?: IHyphenationOptions;
+};
 
 // <xs:element name="coreProperties" type="CT_CoreProperties"/>
 
@@ -72,15 +76,7 @@ export interface IPropertiesOptions {
 export class CoreProperties extends XmlComponent {
     public constructor(options: Omit<IPropertiesOptions, "sections">) {
         super("cp:coreProperties");
-        this.root.push(
-            new DocumentAttributes({
-                cp: "http://schemas.openxmlformats.org/package/2006/metadata/core-properties",
-                dc: "http://purl.org/dc/elements/1.1/",
-                dcterms: "http://purl.org/dc/terms/",
-                dcmitype: "http://purl.org/dc/dcmitype/",
-                xsi: "http://www.w3.org/2001/XMLSchema-instance",
-            }),
-        );
+        this.root.push(new DocumentAttributes(["cp", "dc", "dcterms", "dcmitype", "xsi"]));
         if (options.title) {
             this.root.push(new StringContainer("dc:title", options.title));
         }
@@ -107,11 +103,15 @@ export class CoreProperties extends XmlComponent {
     }
 }
 
+class TimestampElementProperties extends XmlAttributeComponent<{ readonly type: string }> {
+    protected readonly xmlKeys = { type: "xsi:type" };
+}
+
 class TimestampElement extends XmlComponent {
     public constructor(name: string) {
         super(name);
         this.root.push(
-            new DocumentAttributes({
+            new TimestampElementProperties({
                 type: "dcterms:W3CDTF",
             }),
         );

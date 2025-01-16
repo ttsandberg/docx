@@ -1,26 +1,27 @@
 import { FileChild } from "@file/file-child";
 import { XmlAttributeComponent, XmlComponent } from "@file/xml-components";
 
-export interface ICommentOptions {
+export type ICommentOptions = {
     readonly id: number;
     readonly children: readonly FileChild[];
     readonly initials?: string;
     readonly author?: string;
     readonly date?: Date;
-}
+};
 
-export interface ICommentExtendedOptions {
+export type ICommentsOptions = {
+    readonly children: readonly ICommentOptions[];
+};
+
+export type ICommentExtendedOptions = {
     readonly paraId: string;
     readonly done: number;
     readonly commentId: string;
-}
+};
 
-export interface ICommentsOptions {
-    readonly children: readonly ICommentOptions[];
-}
-export interface ICommentsExtendedOptions {
+export type ICommentsExtendedOptions = {
     readonly children: readonly ICommentExtendedOptions[];
-}
+};
 
 class CommentAttributes extends XmlAttributeComponent<{
     readonly id: number;
@@ -107,6 +108,7 @@ class RootCommentsAttributes extends XmlAttributeComponent<{
         "xmlns:wpg": "xmlns:wpg",
         "xmlns:wpi": "xmlns:wpi",
         "xmlns:wne": "xmlns:wne",
+        "xmlns:wps": "xmlns:wps",
         "mc:Ignorable": "mc:Ignorable",
     };
 }

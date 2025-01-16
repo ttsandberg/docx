@@ -1,20 +1,21 @@
 import JSZip from "jszip";
 import { Element, js2xml } from "xml-js";
 
-import { ConcreteHyperlink, ExternalHyperlink, ParagraphChild } from "@file/paragraph";
-import { FileChild } from "@file/file-child";
-import { IMediaData, Media } from "@file/media";
+import { ImageReplacer } from "@export/packer/image-replacer";
+import { DocumentAttributeNamespaces } from "@file/document";
 import { IViewWrapper } from "@file/document-wrapper";
 import { File } from "@file/file";
-import { IContext } from "@file/xml-components";
-import { ImageReplacer } from "@export/packer/image-replacer";
+import { FileChild } from "@file/file-child";
+import { IMediaData, Media } from "@file/media";
+import { ConcreteHyperlink, ExternalHyperlink, ParagraphChild } from "@file/paragraph";
 import { TargetModeType } from "@file/relationships/relationship/relationship";
+import { IContext } from "@file/xml-components";
 import { uniqueId } from "@util/convenience-functions";
 
+import { appendContentType } from "./content-types-manager";
+import { appendRelationship, getNextRelationshipIndex } from "./relationship-manager";
 import { replacer } from "./replacer";
 import { toJson } from "./util";
-import { appendRelationship, getNextRelationshipIndex } from "./relationship-manager";
-import { appendContentType } from "./content-types-manager";
 
 // eslint-disable-next-line functional/prefer-readonly-type
 export type InputDataType = Buffer | string | number[] | Uint8Array | ArrayBuffer | Blob | NodeJS.ReadableStream;
@@ -34,15 +35,15 @@ type FilePatch = {
     readonly children: readonly FileChild[];
 };
 
-interface IImageRelationshipAddition {
+type IImageRelationshipAddition = {
     readonly key: string;
     readonly mediaDatas: readonly IMediaData[];
-}
+};
 
-interface IHyperlinkRelationshipAddition {
+type IHyperlinkRelationshipAddition = {
     readonly key: string;
     readonly hyperlink: { readonly id: string; readonly link: string };
-}
+};
 
 export type IPatch = ParagraphPatch | FilePatch;
 
@@ -65,7 +66,7 @@ export type PatchDocumentOutputType = keyof OutputByType;
 export type PatchDocumentOptions<T extends PatchDocumentOutputType = PatchDocumentOutputType> = {
     readonly outputType: T;
     readonly data: InputDataType;
-    readonly patches: { readonly [key: string]: IPatch };
+    readonly patches: Readonly<Record<string, IPatch>>;
     readonly keepOriginalStyles?: boolean;
 };
 
@@ -100,6 +101,24 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
         }
 
         const json = toJson(await value.async("text"));
+
+        if (key === "word/document.xml") {
+            const document = json.elements?.find((i) => i.name === "w:document");
+            if (document) {
+                // We could check all namespaces from Document, but we'll instead
+                // check only those that may be used by our element types.
+
+                // eslint-disable-next-line functional/immutable-data
+                document.attributes = document.attributes ?? {};
+                for (const ns of ["mc", "wp", "r", "w15", "m"] as const) {
+                    // eslint-disable-next-line functional/immutable-data
+                    document.attributes[`xmlns:${ns}`] = DocumentAttributeNamespaces[ns];
+                }
+                // eslint-disable-next-line functional/immutable-data
+                document.attributes["mc:Ignorable"] = `${document.attributes["mc:Ignorable"] || ""} w15`.trim();
+            }
+        }
+
         if (key.startsWith("word/") && !key.endsWith(".xml.rels")) {
             const context: IContext = {
                 file,
@@ -132,39 +151,37 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
                 // We need to loop through to catch every occurrence of the patch text
                 // It is possible that the patch text is in the same run
                 // This algorithm is limited to one patch per text run
-                // Once it cannot find any more occurrences, it will throw an error, and then we break out of the loop
+                // We break out of the loop once it cannot find any more occurrences
                 // https://github.com/dolanmiu/docx/issues/2267
-                // eslint-disable-next-line no-constant-condition
                 while (true) {
-                    try {
-                        replacer({
-                            json,
-                            patch: {
-                                ...patchValue,
-                                children: patchValue.children.map((element) => {
-                                    // We need to replace external hyperlinks with concrete hyperlinks
-                                    if (element instanceof ExternalHyperlink) {
-                                        const concreteHyperlink = new ConcreteHyperlink(element.options.children, uniqueId());
-                                        // eslint-disable-next-line functional/immutable-data
-                                        hyperlinkRelationshipAdditions.push({
-                                            key,
-                                            hyperlink: {
-                                                id: concreteHyperlink.linkId,
-                                                link: element.options.link,
-                                            },
-                                        });
-                                        return concreteHyperlink;
-                                    } else {
-                                        return element;
-                                    }
-                                }),
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            } as any,
-                            patchText,
-                            context,
-                            keepOriginalStyles,
-                        });
-                    } catch {
+                    const { didFindOccurrence } = replacer({
+                        json,
+                        patch: {
+                            ...patchValue,
+                            children: patchValue.children.map((element) => {
+                                // We need to replace external hyperlinks with concrete hyperlinks
+                                if (element instanceof ExternalHyperlink) {
+                                    const concreteHyperlink = new ConcreteHyperlink(element.options.children, uniqueId());
+                                    // eslint-disable-next-line functional/immutable-data
+                                    hyperlinkRelationshipAdditions.push({
+                                        key,
+                                        hyperlink: {
+                                            id: concreteHyperlink.linkId,
+                                            link: element.options.link,
+                                        },
+                                    });
+                                    return concreteHyperlink;
+                                } else {
+                                    return element;
+                                }
+                            }),
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        } as any,
+                        patchText,
+                        context,
+                        keepOriginalStyles,
+                    });
+                    if (!didFindOccurrence) {
                         break;
                     }
                 }

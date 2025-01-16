@@ -1,18 +1,23 @@
-import { Element } from "xml-js";
 import xml from "xml";
+import { Element } from "xml-js";
 
 import { Formatter } from "@export/formatter";
 import { IContext, XmlComponent } from "@file/xml-components";
 
 import { IPatch, PatchType } from "./from-docx";
-import { toJson } from "./util";
-import { replaceTokenInParagraphElement } from "./paragraph-token-replacer";
 import { findRunElementIndexWithToken, splitRunElement } from "./paragraph-split-inject";
+import { replaceTokenInParagraphElement } from "./paragraph-token-replacer";
 import { findLocationOfText } from "./traverser";
+import { toJson } from "./util";
 
 const formatter = new Formatter();
 
 const SPLIT_TOKEN = "ɵ";
+
+type IReplacerResult = {
+    readonly element: Element;
+    readonly didFindOccurrence: boolean;
+};
 
 export const replacer = ({
     json,
@@ -26,24 +31,21 @@ export const replacer = ({
     readonly patchText: string;
     readonly context: IContext;
     readonly keepOriginalStyles?: boolean;
-}): Element => {
+}): IReplacerResult => {
     const renderedParagraphs = findLocationOfText(json, patchText);
 
     if (renderedParagraphs.length === 0) {
-        throw new Error(`Could not find text ${patchText}`);
+        return { element: json, didFindOccurrence: false };
     }
 
     for (const renderedParagraph of renderedParagraphs) {
-        const textJson = patch.children
-            // eslint-disable-next-line no-loop-func
-            .map((c) => toJson(xml(formatter.format(c as XmlComponent, context))))
-            .map((c) => c.elements![0]);
+        const textJson = patch.children.map((c) => toJson(xml(formatter.format(c as XmlComponent, context)))).map((c) => c.elements![0]);
 
         switch (patch.type) {
             case PatchType.DOCUMENT: {
                 const parentElement = goToParentElementFromPath(json, renderedParagraph.pathToParagraph);
                 const elementIndex = getLastElementIndexFromPath(renderedParagraph.pathToParagraph);
-                // eslint-disable-next-line functional/immutable-data, prefer-destructuring
+                // eslint-disable-next-line functional/immutable-data
                 parentElement.elements!.splice(elementIndex, 1, ...textJson);
                 break;
             }
@@ -67,12 +69,12 @@ export const replacer = ({
 
                 if (keepOriginalStyles) {
                     const runElementNonTextualElements = runElementToBeReplaced.elements!.filter(
-                        (e) => e.type === "element" && e.name !== "w:t",
+                        (e) => e.type === "element" && e.name === "w:rPr",
                     );
 
                     newRunElements = textJson.map((e) => ({
                         ...e,
-                        elements: [...runElementNonTextualElements, ...e.elements!],
+                        elements: [...runElementNonTextualElements, ...(e.elements ?? [])],
                     }));
 
                     patchedRightElement = {
@@ -88,7 +90,7 @@ export const replacer = ({
         }
     }
 
-    return json;
+    return { element: json, didFindOccurrence: true };
 };
 
 const goToElementFromPath = (json: Element, path: readonly number[]): Element => {
