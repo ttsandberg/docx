@@ -119,7 +119,7 @@ class RootCommentsExtendedAttributes extends XmlAttributeComponent<{
     protected readonly xmlKeys = {
         "xmlns:mc": "xmlns:mc",
         "xmlns:w15": "xmlns:w15",
-        "mc:Ignorable": "mc:Ignorable"
+        "mc:Ignorable": "mc:Ignorable",
     };
 }
 
@@ -215,7 +215,7 @@ export class Comments extends XmlComponent {
                 "xmlns:wpi": "http://schemas.microsoft.com/office/word/2010/wordprocessingInk",
                 "xmlns:wne": "http://schemas.microsoft.com/office/word/2006/wordml",
                 "xmlns:wps": "http://schemas.microsoft.com/office/word/2010/wordprocessingShape",
-                "mc:Ignorable": "w14 wp14 w15"
+                "mc:Ignorable": "w14 wp14 w15",
             }),
         );
 
@@ -233,7 +233,7 @@ export class CommentsExtended extends XmlComponent {
             new RootCommentsExtendedAttributes({
                 "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
                 "xmlns:w15": "http://schemas.microsoft.com/office/word/2012/wordml",
-                "mc:Ignorable": "w15"
+                "mc:Ignorable": "w15",
             }),
         );
 
